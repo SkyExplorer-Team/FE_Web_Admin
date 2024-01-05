@@ -62,7 +62,7 @@ function Login() {
                             onChange={(e) => setPassword(e.target.value)}
                           />
                         </Form.Group>
-                        <div className="forgetPassword py-3"><Link to="#">Forgot Password?</Link></div>
+                        <div className="forgetPassword py-3"><Link to="/forgot-password">Forgot Password?</Link></div>
                         <Button
                           variant="primary"
                           type="button"

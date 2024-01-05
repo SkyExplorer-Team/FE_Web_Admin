@@ -42,6 +42,7 @@
 
 .login-form > .forgetPassword > a {
   color: #38A993;
+  text-decoration: none;
 }
 
 .imageLoginFirstColumn > img {
