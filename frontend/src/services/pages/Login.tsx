@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
+import brandLogo from '..//../assets/images/Brand_Logo.svg';
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/LoginStyle.css";
+import { Link } from "react-router-dom";
 
 function Login() {
   const [username, setUsername] = useState("");
@@ -15,7 +17,7 @@ function Login() {
     <div className="wrapper">
       <Container>
         <Card className="login-card">
-          <Card.Body>
+          <Card.Body className="p-0">
             <div className="row">
               <div className="col firstColumnCardLogin">
                 <img
@@ -26,39 +28,52 @@ function Login() {
                 />
               </div>
               <div className="col secondColumnCardLogin">
-                <Card.Title className="signInLabel">Sign In</Card.Title>
-                <Form className="login-form">
-                  <Form.Group controlId="formUsername">
-                    <Form.Label style={{ fontWeight: "bold" }}>
-                      Email
-                    </Form.Label>
-                    <Form.Control
-                      type="text"
-                      placeholder="Enter Your Email"
-                      value={username}
-                      onChange={(e) => setUsername(e.target.value)}
-                    />
-                  </Form.Group>
-
-                  <Form.Group controlId="formPassword">
-                    <Form.Label>Password</Form.Label>
-                    <Form.Control
-                      type="password"
-                      placeholder="Enter Your Password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                    />
-                  </Form.Group>
-
-                  <Button
-                    variant="primary"
-                    type="button"
-                    onClick={handleLogin}
-                    className="btn btn success mt-3"
-                  >
-                    Sign In
-                  </Button>
-                </Form>
+                  <div className="row">
+                    <div className="col-12 py-3 text-end logoContainer" >
+                    <img
+                        src={brandLogo}
+                        alt="Logo"
+                        className="img-fluid"
+                        style={{ backgroundSize: "cover", width: "116px", height: "24px"}}
+                      />
+                    </div>
+                    <div className="col-12 py-3">
+                    <Card.Title className="signInLabel fw-semibold fs-3">Sign In</Card.Title>
+                      <Form className="login-form">
+                        <Form.Group controlId="formUsername" className="py-2">
+                          <Form.Label>
+                            Email
+                          </Form.Label>
+                          <Form.Control
+                            className="my-1"
+                            type="email"
+                            placeholder="Enter Your Email"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                          />
+                        </Form.Group>
+                        <Form.Group controlId="formPassword" className="py-2">
+                          <Form.Label>Password</Form.Label>
+                          <Form.Control
+                            className="my-1"
+                            type="password"
+                            placeholder="Enter Your Password"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                          />
+                        </Form.Group>
+                        <div className="forgetPassword py-3"><Link to="#">Forgot Password?</Link></div>
+                        <Button
+                          variant="primary"
+                          type="button"
+                          onClick={handleLogin}
+                          className="btn btn success mt-3 my-3"
+                        >
+                          Sign In
+                        </Button>
+                      </Form>
+                    </div>
+                  </div>
               </div>
             </div>
           </Card.Body>
