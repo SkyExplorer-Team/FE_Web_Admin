@@ -1,0 +1,47 @@
+.wrapper {
+  background-color: #38a993; /* Biru muda */
+  background-image: url("https://i.ibb.co/zX4gSj2/Vector.png"); /* plane Vector */
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+
+.login-card {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;  
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: black; /* Hitam */
+}
+
+.login-form {
+  margin-top: 20px;
+}
+
+.login-form button {
+  background-color: green; /* Hijau */
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  color: white; /* Putih */
+}
+
+.login-form input {
+  border: none;
+  border-bottom: 1px solid #87ceeb; /* Garis biru muda */
+  padding: 10px;
+  border-radius: 5px;
+}
+
+.imageLoginFirstColumn > img {
+  max-width: 100%;
+}
+
+.secondColumnCardLogin > .signInLabel {
+  font-size: 32px;
+}
