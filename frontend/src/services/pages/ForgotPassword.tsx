@@ -7,7 +7,7 @@ export default function ForgotPassword() {
     <div className="wrapper">
       <Container>
         <Card className="card-box">
-          <CardBody>
+          <div className="card-body">
             <div className="row">
               <div className="col img-col">
                 <img
@@ -39,7 +39,7 @@ export default function ForgotPassword() {
                 </Form>
               </div>
             </div>
-          </CardBody>
+          </div>
         </Card>
       </Container>
     </div>
