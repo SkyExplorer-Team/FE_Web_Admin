@@ -24,20 +24,20 @@
   margin-top: 20px;
 }
 
+
 .login-form button {
   background-color: #38A993;
   border: none;
-  border-radius: 5px;
-  padding: 10px 20px;
+  padding: 16px;
   color: white; /* Putih */
   width: 100%; 
+  border-radius: var(--Corner-Radius-Radius-Button-12, 12px);
 }
 
 .login-form input {
-  border: none;
-  border-bottom: 1px solid #87ceeb; /* Garis biru muda */
   padding: 10px;
-  border-radius: 5px;
+  border-radius: 12px;
+  border: 2px solid var(--Neutral-100, #F2F4F7);
 }
 
 .login-form > .forgetPassword > a {
@@ -49,10 +49,23 @@
   max-width: 100%;
 }
 
-.secondColumnCardLogin > .signInLabel {
-  font-size: 32px;
+
+.secondColumnCardLogin > .row {
+  height: 100%;
 }
 
 .secondColumnCardLogin > .row > .logoContainer {
-  border-bottom: 2px dashed #EAECF0;
+  border-bottom: 1px dashed #EAECF0;
+}
+
+.passwordInput > .input-group > input {
+  border-right: 0;
+}
+
+.passwordInput > .input-group > .input-group-append {
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid var(--Neutral-100, #F2F4F7);
+  border-left: 0;
+  color: #677084;
 }
