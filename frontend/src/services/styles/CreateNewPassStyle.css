@@ -1,23 +1,22 @@
 .form > .forgetPassword > a {
-  color: #38A993;
+  color: #38a993;
   text-decoration: none;
 }
 
-.form > button {
-  margin-top: 10px;
+.form  > button {
+  margin-top: 15px;
 }
 
 .imageLoginFirstColumn > img {
   max-width: 100%;
 }
 
-
 .secondColumnCardLogin > .row {
   height: 100%;
 }
 
 .secondColumnCardLogin > .row > .logoContainer {
-  border-bottom: 1px dashed #EAECF0;
+  border-bottom: 1px dashed #eaecf0;
   max-height: 48px;
 }
 
@@ -28,7 +27,7 @@
 .passwordInput > .input-group > .input-group-append {
   padding: 10px;
   border-radius: 12px;
-  border: 2px solid var(--Neutral-100, #F2F4F7);
+  border: 2px solid var(--Neutral-100, #f2f4f7);
   border-left: 0;
   color: #677084;
 }
