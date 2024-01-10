@@ -59,7 +59,7 @@ function Login() {
                             onBlur={(e) => handleBlurUsernameInput(e.target.value, setUsername, setInputBorderEmail, setIsEmailValid)}
                           />
                         </Form.Group>
-                          <p style={(username === '' || isEmailValid) ? { visibility: 'hidden' } : { display: 'block' }} className="text-danger fw-normal lh-1 mb-2">Please enter a valid email address.</p>
+                          <p style={(username === '' || isEmailValid) ? { visibility: 'hidden' } : { display: 'block' }} className="invalid-information fw-normal mb-2">Please enter a valid email address.</p>
                         <Form.Group controlId="formPassword" className="passwordInput">
                           <Form.Label>Password</Form.Label>
                           <div className="input-group">
@@ -77,7 +77,7 @@ function Login() {
                             </div>
                           </div>
                         </Form.Group>
-                        <p style={!isPasswordValid ? { display: 'block' } : { visibility: 'hidden' }} className="text-danger fw-normal lh-1 mb-2">Whoops! Incorrect password. Please try again.</p>
+                        <p style={!isPasswordValid ? { display: 'block' } : { visibility: 'hidden' }} className="invalid-information fw-normal mb-2">Whoops! Incorrect password. Please try again.</p>
                         <div className="forgetPassword pt-2 pb-4"><Link to="/forgot-password">Forgot Password?</Link></div>
                         <Button
                           variant="primary"

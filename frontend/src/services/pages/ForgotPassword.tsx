@@ -48,7 +48,7 @@ export default function ForgotPassword() {
                           onBlur={(e) => handleBlurUsernameInput(e.target.value, setUsername, setInputBorderEmail, setIsEmailValid)}
                         />
                       </Form.Group>
-                      <p style={(username === '' || isEmailValid) ? { visibility: 'hidden' } : { display: 'block' }} className="text-danger fw-normal lh-1 mb-2">Please enter a valid email address.</p>
+                      <p style={(username === '' || isEmailValid) ? { visibility: 'hidden' } : { display: 'block' }} className="invalid-information fw-normal lh-1 mb-2">Please enter a valid email address.</p>
                       <div className="my-5"></div>
                       <Button
                           variant="primary"

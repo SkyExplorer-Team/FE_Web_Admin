@@ -7,7 +7,7 @@ const handleBlurUsernameInput = (e: string,
                     setUsername(e)
                     if (e !== "") {
                     if (!validateEmailExpression(e)) {
-                        setInputBorderEmail('wrong-input');
+                        setInputBorderEmail('is-invalid');
                         setIsEmailValid(false)
                     } else {
                         setInputBorderEmail('true-input');

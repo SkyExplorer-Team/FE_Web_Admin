@@ -27,7 +27,7 @@
 
 .card-box {
   max-width: 800px;
-  max-height: 530px;
+  max-height: 526px;
   margin: 0 auto;
   padding: 24px;  
   border-radius: 10px;
@@ -83,4 +83,9 @@
 
 .true-input{
   border-color: #38A993 !important;
+}
+
+.invalid-information {
+  font-size: .875em;
+  color: var(--bs-form-invalid-color);
 }
