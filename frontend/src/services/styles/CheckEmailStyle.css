@@ -1,0 +1,83 @@
+.wrapper {
+  background-color: #38a993; /* Biru muda */
+  background-image: url("https://i.ibb.co/zX4gSj2/Vector.png"); /* plane Vector */
+  background-repeat: no-repeat;
+  background-size: cover;
+  height: 100vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+
+.card-box {
+  max-width: 800px;
+  max-height: 530px;
+  margin: 0 auto;
+  padding: 24px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: black;
+}
+
+.card-body {
+  padding: 0;
+}
+
+.img-col > img {
+  max-width: 100%;
+}
+
+.title-card {
+  font-size: 32px;
+  font-style: normal;
+  font-weight: 600;
+  line-height: 48px;
+  margin: 32px 0 0 0;
+}
+
+.subtitle-card {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 24px;
+  margin: 20px 0 0 0;
+}
+
+.body-col > .row {
+  height: 100%;
+}
+
+.body-col > .row > .logoContainer {
+  border-bottom: 1px dashed #eaecf0;
+}
+
+.email-form {
+  margin: 20px 0 0 0;
+}
+
+#btn-instruction {
+  background-color: #38a993;
+  border: none;
+  padding: 16px;
+  color: white; /* Putih */
+  width: 100%;
+  border-radius: var(--Corner-Radius-Radius-Button-12, 12px);
+}
+
+.email-form input {
+  padding: 10px;
+  border-radius: 12px;
+  border: 2px solid var(--Neutral-100, #f2f4f7);
+}
+
+label {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 24px;
+}
+
+.input-email {
+  margin: 6px 0 0 0;
+}
