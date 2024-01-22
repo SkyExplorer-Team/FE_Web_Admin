@@ -1,0 +1,357 @@
+openapi: 3.0.0
+info:
+  title: Sky Explorer Web Admin App
+  version: 1.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /api/v1/login:
+    post:
+      summary: Mendapatkan informasi login
+      description: Mengambil informasi login dari pengguna
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+              required:
+                - email
+                - password
+      responses:
+        '201':
+          description: Login Success, Show User Log in data
+          content: 
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: integer
+                  email:
+                    type: string
+                  token:
+                    type: string
+                  createdAt:
+                    type: string
+                    format: date-time
+                  updatedAt:
+                    type: string
+                    format: date-time
+                required:
+                  - id
+                  - email
+                  - token
+                  - createdAt
+                  - updatedAt
+        '401':
+          description: Login Failed, Wrong Passowrd
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+        '404':
+          description: Login Failed, Email not Found
+          content: 
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/v1/forget-password:
+    post:
+  /api/v1/set-password/{token}:
+    put:
+  /api/v1/auth:
+    get:
+      security:
+          - bearerAuth: []
+  /api/v1/users:
+    get:
+      security:
+          - bearerAuth: []
+    post:
+      security:
+          - bearerAuth: []
+  /api/v1/users/{id}:
+    get:
+      security:
+          - bearerAuth: []
+    put:
+      security:
+          - bearerAuth: []
+    delete:
+      security:
+          - bearerAuth: []
+  /api/v1/userProfile:
+    get:
+      security:
+        - bearerAuth: []
+      summary: Mendapatkan profil pengguna
+      description: Mengambil informasi profil pengguna yang terautentikasi
+      responses:
+        '200':
+          description: User Profile Retrieved
+          content:
+            application/json: 
+              schema:
+                  type: object
+                  properties:
+                    id:
+                      type: integer
+                    email:
+                      type: string
+                    password:
+                      type: string
+                    username:
+                      type: string
+                    role:
+                      type: string
+                    is_active:
+                      type: boolean
+                    create_at:
+                      type: date-time
+                    update_at:
+                      type: date-time
+                  required:
+                    - id
+                    - email
+                    - password
+                    - username
+                    - update_at
+                    - create_at
+                    - is_active
+                    - role
+        '401':
+          description: Bad Request Unauthorized
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/v1/register:
+    post:
+      summary: Mendaftarkan pengguna baru
+      description: Mendaftarkan pengguna baru dengan data yang diberikan
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                name:
+                  type: string
+      responses:
+        '201':
+          description: Registration Success
+          content:
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  id:
+                    type: object
+  /api/v1/changeToAdmin/{id}:
+    post:
+      security:
+          - bearerAuth: []
+      summary: Mengubah status pengguna menjadi admin
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID pengguna yang akan diubah
+          schema:
+            type: number
+      responses:
+        '200':
+          description: User status changed to admin
+          content:
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  userInfo:
+                    type: object
+        '404':
+          description: User not Found
+          content:
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+  /api/v1/cars:
+    get:
+      security:
+              - bearerAuth: []
+      summary: Mendapatkan daftar mobil
+      description: Mengambil daftar mobil yang tersedia
+      responses:
+        '200':
+          description: Car list retrieved
+          content:
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+    post:
+      security:
+            - bearerAuth: []
+      summary: Menambahkan mobil baru
+      description: Menambahkan mobil baru ke dalam sistem
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                rentPerDay:
+                  type: number
+                type:
+                  type: string
+                image:
+                  type: file
+              required:
+                - name
+                - rentPerDay
+                - type
+                - image
+      responses:
+        '201':
+          description: Car added successfully
+          content:
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  newDataCar:
+                    type: object
+                  logInsert:
+                    type: object
+  /api/v1/cars/{id}:
+    get:
+      security:
+            - bearerAuth: []
+      summary: Mendapatkan detail mobil
+      description: Mengambil detail mobil berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID mobil yang akan diambil detailnya
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Car detail retrieved
+          content:
+            application/json: 
+              schema:
+                  type: object
+                  properties:
+                    message:
+                      type: string
+                    data:
+                      type: object
+    put:
+      security:
+          - bearerAuth: []
+      summary: Mengubah detail mobil
+      description: Mengubah detail mobil berdasarkan ID
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                rentPerDay:
+                  type: number
+                type:
+                  type: string
+                image:
+                  type: file
+              required:
+                - name
+                - rentPerDay
+                - type
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID mobil yang akan diubah detailnya
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Car detail updated
+          content:
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  updatedCarData:
+                    type: object
+                  logInsert:
+                    type: object
+    delete: 
+      security:
+          - bearerAuth: []
+      summary: Menghapus mobil
+      description: Menghapus mobil berdasarkan ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          description: ID mobil yang akan dihapus
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Car deleted successfully
+          content:
+            application/json: 
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                  logActivitiy:
+                    type: object

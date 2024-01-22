@@ -2,7 +2,7 @@ import { type Knex } from 'knex'
 import bcrypt from 'bcrypt'
 import { v4 as uuidv4 } from 'uuid'
 
-const TABLE_NAME = 'users'
+const TABLE_NAME = 'admin'
 
 export async function seed (knex: Knex): Promise<void> {
   await knex(TABLE_NAME).del()
@@ -13,16 +13,10 @@ export async function seed (knex: Knex): Promise<void> {
   await knex(TABLE_NAME).insert([
     {
       id: uniqueId,
-      national_id: 'NAT123456',
-      firstname: 'Supersky',
-      lastname: 'Admin',
+      name: 'Supersky Super Admin',
       password: hashedPassword,
-      salutation: 'Mr.',
       email: 'adminsupersky@mail.com',
-      dob: new Date(),
-      phone: '+1234567890',
-      subscribe: true,
-      role_id: 'ROLE_ADMIN'
+      id_role: '4b1f94d2-58cf-4a5e-b9f2-8af7c0d97f94'
     }
   ])
 };
