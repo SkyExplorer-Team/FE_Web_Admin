@@ -1,48 +1,10 @@
-.wrapper {
-  background-color: #38a993; /* Biru muda */
-  background-image: url("https://i.ibb.co/zX4gSj2/Vector.png"); /* plane Vector */
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 100vh;
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  width: 100vw;
-}
-
-.login-card {
-  max-width: 800px;
-  max-height: 530px;
-  margin: 0 auto;
-  padding: 24px;  
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  color: black; /* Hitam */
-}
-
-.login-form {
-  margin-top: 20px;
-}
-
-
-.login-form button {
-  background-color: #38A993;
-  border: none;
-  padding: 16px;
-  color: white; /* Putih */
-  width: 100%; 
-  border-radius: var(--Corner-Radius-Radius-Button-12, 12px);
-}
-
-.login-form input {
-  padding: 10px;
-  border-radius: 12px;
-  border: 2px solid var(--Neutral-100, #F2F4F7);
-}
-
-.login-form > .forgetPassword > a {
+.form > .forgetPassword > a {
   color: #38A993;
   text-decoration: none;
+}
+
+.form > button {
+  margin-top: 10px;
 }
 
 .imageLoginFirstColumn > img {
@@ -56,6 +18,7 @@
 
 .secondColumnCardLogin > .row > .logoContainer {
   border-bottom: 1px dashed #EAECF0;
+  max-height: 48px;
 }
 
 .passwordInput > .input-group > input {
