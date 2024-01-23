@@ -1,7 +1,15 @@
+import React, { ReactNode } from "react";
 import { Detector } from "react-detect-offline";
 import NoConnection from "../assets/images/illustration_no_conn.svg";
 
-const CheckConnection = (props) => {
+interface CheckConnectionProps {
+  children: ReactNode;
+}
+
+const CheckConnection: React.FC<CheckConnectionProps> = (props) => {
+  const handleRetry = () => {
+    window.location.reload();
+  };
   return (
     <Detector
       render={({ online }) => (
@@ -53,6 +61,7 @@ const CheckConnection = (props) => {
                   color: "white",
                   marginTop: "40px",
                 }}
+                onClick={handleRetry}
               >
                 Retry
               </button>

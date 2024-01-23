@@ -45,6 +45,7 @@ function Login() {
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem('token', data.token);
+        localStorage.setItem('name', data.name);
         setIsLoading(false)
         navigate('/dashboard');
       } else {

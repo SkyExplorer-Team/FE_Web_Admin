@@ -3,9 +3,10 @@ import jwt from 'jsonwebtoken'
 interface UserPayload {
   id: string
   email: string
-  role_id: string
-  firstName: string
-  lastName: string
+  id_role: string
+  name: string
+  expirationTime: string
+  tokenType: string
 }
 
 function createToken (payLoad: UserPayload): string {

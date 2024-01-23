@@ -13,12 +13,34 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+#wrapper{
+  background-color: #38a993;
+  background-image: url("https://i.ibb.co/zX4gSj2/Vector.png");
+  width: 100vw;
+}
+.header-row {
+  width: 100%;
+}
+.dropdown-menu[data-bs-popper]{
+  right: 0;
+  left: auto;
+}
+
 .wrapper {
   background-color: #38a993;
   background-image: url("https://i.ibb.co/zX4gSj2/Vector.png");
   background-repeat: no-repeat;
   background-size: cover;
   height: 100vh;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+  width: 100vw;
+}
+
+.wrapper-white {
+  background-color: white;
+  min-height: 100vh;
   align-items: center;
   display: flex;
   justify-content: center;
@@ -77,6 +99,29 @@
   border-radius: var(--Corner-Radius-Radius-Button-12, 12px);
 }
 
+.secondary-button {
+  background-color: white;
+  border: 2px solid;
+  padding: 16px;
+  color: #38A993; 
+  width: 100%; 
+  border-radius: var(--Corner-Radius-Radius-Button-12, 12px);
+}
+
+.secondary-button:disabled {
+  background-color: #D0D5DD;
+  border: 2px solid #D0D5DD ;
+  color: #FFFFFF; 
+}
+
+.primary-button-small {
+  background-color: #38A993;
+  border: none;
+  padding: 8px 16px;
+  color: white; 
+  border-radius: var(--Corner-Radius-Radius-Button-12, 12px);
+}
+
 .wrong-input{
   border-color: #C81A23 !important;
 }
@@ -88,4 +133,18 @@
 .invalid-information {
   font-size: .875em;
   color: var(--bs-form-invalid-color);
+}
+
+.sidebar-list .badge{
+background-color: #38A993;
+color: white;
+border-radius: 50%;
+padding: 8px;
+margin: 5px;
+}
+
+.sidebar-list a{
+  text-decoration: none;
+  font-size: large;
+  font-weight: 500;
 }

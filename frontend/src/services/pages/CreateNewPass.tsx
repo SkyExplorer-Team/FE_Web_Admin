@@ -1,8 +1,10 @@
 import React, { useState } from "react";
 import { Container, Form, Button, Card } from "react-bootstrap";
+import { useParams, Link } from 'react-router-dom';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import SkyExploreLogo from "../../assets/images/Brand_Logo.svg";
+import domainApi from "../config/domainApi";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "../styles/CreateNewPassStyle.css";
 
@@ -15,6 +17,8 @@ const CreateNewPass: React.FC<CreateNewPassProps> = () => {
   const [isConfirmPasswordVisible, setConfirmPasswordVisible] = useState<boolean>(false);
   const [passwordMismatchError, setPasswordMismatchError] = useState<boolean>(false);
   const [passwordLengthError, setPasswordLengthError] = useState<boolean>(false);
+  const [isResetPasswordSuccess, setIsResetPasswordSuccess] = useState(false);
+  const { token } = useParams();
 
   const togglePasswordVisibility = () => {
     setPasswordVisible(!isPasswordVisible);
@@ -42,15 +46,45 @@ const CreateNewPass: React.FC<CreateNewPassProps> = () => {
     }
   };
 
-  const handleSaveNewPass = () => {
+  const handleSaveNewPass = async () => {
     if (password !== confirmPassword || password.length < 8) {
       setPasswordMismatchError(password !== confirmPassword);
       setPasswordLengthError(password.length < 8);
     } else {
       setPasswordMismatchError(false);
       setPasswordLengthError(false);
-      // Proceed with saving the new password or any other logic
-      console.log("Password saved successfully!");
+      try {
+        const response = await fetch(`${domainApi}/api/v1/set-password/${token}`, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            password: password,
+            confirmPassowrd: confirmPassword,
+          }),
+        });
+  
+        if (response.ok) {
+          setIsResetPasswordSuccess(true)
+        } else {
+          const statusCode = response.status;
+          const errorMessage = await response.json()
+          switch (statusCode) {
+            case 404:
+              console.log('Wrong Email:', errorMessage);
+              break;
+            case 401:
+              console.log('Wrong Password:', errorMessage);
+              break;
+            default:
+              console.log('Unexpected Error:', errorMessage);
+              break;
+          }
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+      }
     }
   };
 
@@ -73,6 +107,29 @@ const CreateNewPass: React.FC<CreateNewPassProps> = () => {
                   <div className="col-12 pb-3 text-end logoContainer">
                     <img src={SkyExploreLogo} alt="Logo"/>
                   </div>
+                  {isResetPasswordSuccess ?
+                  <>
+                    <div className="col-12 py-2 align-self-start">
+                      <Card.Title className="fw-semibold fs-2 mb-4">Successful Password Reset</Card.Title>
+                      <Card.Subtitle className="subtitle-card">
+                        You're all set! Let's get you back in.
+                      </Card.Subtitle>
+                    </div>
+                    <div className="col-12 py-2 align-self-end">
+                      <Link
+                          to={'/'}
+                        >
+                          <Button
+                            variant="primary"
+                            type="button"
+                            className="btn btn-success primary-button my-2"
+                          >
+                            Sign In
+                          </Button>
+                        </Link>
+                    </div>
+                  </> :
+                  <>
                   <div className="col-12 py-2 align-self-end">
                     <Card.Title className="fw-semibold fs-2">
                       Create New Password
@@ -171,6 +228,8 @@ const CreateNewPass: React.FC<CreateNewPassProps> = () => {
                       </Button>
                     </Form>
                   </div>
+                  </>
+                  }
                 </div>
               </div>
             </div>
