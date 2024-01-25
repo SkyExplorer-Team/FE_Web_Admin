@@ -1,4 +1,5 @@
 import { UserModel } from '../models/user'
+import { RoleModel } from '../models/role'
 import { type Request, type Response } from 'express'
 import checkPassword from '../utils/checkPassword'
 import createToken from '../utils/createToken'
@@ -155,7 +156,6 @@ const register = async (req: Request, res: Response): Promise<void> => {
   const name: string = req.body.name
   const email: string = String(req.body.email).toLowerCase()
   const password: string = req.body.password
-  const id_role: string = '4b1f94d2-58cf-4a5e-b9f2-8af7c0d97f94'
 
   const existingEmail = await UserModel.query().findOne({ email })
 
@@ -171,11 +171,21 @@ const register = async (req: Request, res: Response): Promise<void> => {
     const hashedPassword = await bcrypt.hash(password, 10)
     const uniqueId = uuidv4()
 
+    const role = await RoleModel.query().findOne({ name: 'ROLE_ADMIN' })
+
+    if (!role) {
+      res.status(500).json({
+        error: 'ROLE_NOT_FOUND',
+        message: 'Role with name ROLE_ADMIN not found.'
+      })
+      return
+    }
+
     const registeredUser = await UserModel.query().insert({
       id: uniqueId,
       email,
       password: hashedPassword,
-      id_role,
+      id_role: role.id,
       name
     }).returning('*')
 
