@@ -1,9 +1,13 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 import express, { type Request, type Response } from 'express'
 import knex from 'knex'
 import { Model } from 'objection'
 import databaseConfig from './src/config/databaseConfig'
 import cors from 'cors'
 import userRouter from './src/routes/userRouter'
+import swaggerUi from 'swagger-ui-express'
+const YAML = require('yamljs')
+const swaggerDocument = YAML.load('./swagger.yaml')
 
 const app = express()
 const knexInstance = knex({
@@ -13,9 +17,10 @@ const knexInstance = knex({
 
 Model.knex(knexInstance)
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
+app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
-app.use(cors())
 app.use('', userRouter)
 
 app.get('/', (req: Request, res: Response) => {

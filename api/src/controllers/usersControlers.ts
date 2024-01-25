@@ -101,7 +101,7 @@ const forgetPasswordRequest = async (req: Request, res: Response): Promise<void>
 
   transport.sendMail(mailOptions, (error, info) => {
     if (error) {
-      res.status(404).json({
+      res.status(500).json({
         error: 'ERROR_WHEN_SENDING_EMAIL',
         message: error
       })
