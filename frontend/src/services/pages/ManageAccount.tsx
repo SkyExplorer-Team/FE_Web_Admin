@@ -1,8 +1,6 @@
-import Card from 'react-bootstrap/Card';
-import Breadcrumb from 'react-bootstrap/Breadcrumb';
-import Button from 'react-bootstrap/Button';
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import {Card, Breadcrumb, Button } from 'react-bootstrap';
+import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import DataTable, { TableColumn } from 'react-data-table-component';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faSearch, faTrash, faPenToSquare } from "@fortawesome/free-solid-svg-icons";
@@ -23,20 +21,19 @@ type UserData = {
     id: string,
     role: {id: string, name:string}
 };
+interface ManageAccountProps {
+  usersData: UserData[];
+}
 
-function ManageAccount() {
-    const navigate = useNavigate();
-    const [userData, setUserData] = useState<UserData[]>([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [record, setRecord] = useState(userData);
+const ManageAccount: React.FC<ManageAccountProps> = ({ usersData }) => {
+    const [record, setRecord] = useState<UserData[]>([]);
     const [infoDeleteData, setInfoDeleteData] = useState({id:"", name:""});
     const [isDeleteModalShow, setIsDeleteModalShow] = useState(false);
     const token = localStorage.getItem('token');
     const [message, setMessage] = useState('');
 
     function handleFilter(event: { target: { value: string; }; }){
-        const newData = userData.filter( row => {
+        const newData = usersData.filter( row => {
             const searchTerm = event.target.value.toLowerCase();
             return  (
                 row.name.toLowerCase().includes(searchTerm) ||
@@ -74,35 +71,6 @@ function ManageAccount() {
         console.error('Error during Delete:', error);
       }
     };
-
-    useEffect(() => {
-        const fetchUserDsata = async () => {
-          try {
-    
-            const response = await fetch(`${domainApi}/api/v1/users`,{
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              });
-    
-            if (response.ok) {
-              const data = await response.json();
-              setUserData(data.data);
-              setRecord(data.data)
-            } else {
-              console.error('Error fetching users data:', response.status);
-              setError("Error fetching users data");
-            }
-          } catch (error) {
-            console.error('Error during fetch:', error);
-            setError("Error fetching users data");
-          } finally {
-            setLoading(false);
-          }
-        };
-    
-        fetchUserDsata();
-      }, [navigate, message, token]);
     
     const columns: TableColumn<DataRow>[] = [
         {
@@ -131,6 +99,9 @@ function ManageAccount() {
         },
     ];
 
+    useEffect(() => {  
+      setRecord(usersData);
+    }, [usersData]);
   return (
     <>
         <div className="container">

@@ -18,6 +18,7 @@
   background-image: url("https://i.ibb.co/zX4gSj2/Vector.png");
   width: 100vw;
 }
+
 .header-row {
   width: 100%;
 }
@@ -36,6 +37,13 @@
   display: flex;
   justify-content: center;
   width: 100vw;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1000; /* Ensure the header is above other elements */
 }
 
 .wrapper-white {

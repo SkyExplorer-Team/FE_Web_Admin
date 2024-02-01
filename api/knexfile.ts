@@ -6,12 +6,7 @@ import databaseConfig from './src/config/databaseConfig'
 const config: Record<string, Knex.Config> = {
   development: {
     client: 'postgresql',
-    connection: {
-      database: 'skyexplorer_apps',
-      user: 'muhammadbachtiar',
-      password: '123456',
-      port: 5000
-    }
+    connection: databaseConfig
   },
 
   staging: {

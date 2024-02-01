@@ -5,6 +5,11 @@ import { Model } from 'objection'
 import databaseConfig from './src/config/databaseConfig'
 import cors from 'cors'
 import userRouter from './src/routes/userRouter'
+import airportRouter from './src/routes/airportRoutes'
+import airplaneRouter from './src/routes/airplaneRoutes'
+import scheduleRouter from './src/routes/scheduleRoutes'
+import nationalRouter from './src/routes/nationalRoutes'
+import mealRouter from './src/routes/mealRoutes'
 import swaggerUi from 'swagger-ui-express'
 const YAML = require('yamljs')
 const swaggerDocument = YAML.load('./swagger.yaml')
@@ -22,6 +27,11 @@ app.use(cors())
 app.use(express.urlencoded({ extended: true }))
 app.use(express.json())
 app.use('', userRouter)
+app.use('', airportRouter)
+app.use('', airplaneRouter)
+app.use('', scheduleRouter)
+app.use('', nationalRouter)
+app.use('', mealRouter)
 
 app.get('/', (req: Request, res: Response) => {
   res.send('Hello world!')

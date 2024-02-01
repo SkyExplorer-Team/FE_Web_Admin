@@ -20,6 +20,7 @@ function EditAccount() {
     const token = localStorage.getItem('token');
     const [loading, setLoading] = useState(true);
     const [message, setMessage] = useState('');
+    console.log(id)
 
     const handleChange = (event: { target: {name: string, value: string }; }) => {
         const { name, value } = event.target;

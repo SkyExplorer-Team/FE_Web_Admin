@@ -15,7 +15,7 @@ const CheckConnection: React.FC<CheckConnectionProps> = (props) => {
       render={({ online }) => (
         <div
           style={{
-            display: "flex",
+            display: "block",
             alignItems: "center",
             justifyContent: "center",
             height: "100vh",
