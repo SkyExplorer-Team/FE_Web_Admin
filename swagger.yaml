@@ -1,0 +1,1672 @@
+openapi: 3.0.0
+info:
+  title: Sky Explorer Web Admin App
+  version: 1.0.0
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /api/v1/login:
+    post:
+      summary: User Admin Login
+      tags:
+        - User
+      description: Authenticate a user admin and generate an access token.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The user's email address.
+                password:
+                  type: string
+                  description: The user's password.
+              required:
+                - email
+                - password
+      responses:
+        '200':
+          description: User authenticated successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  token:
+                    type: string
+                    description: The generated access token.
+                  name:
+                    type: string
+                    description: The user's name.
+        '401':
+          description: Invalid password.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+  /api/v1/forget-password:
+    post:
+      summary: Forget Password Request
+      tags:
+        - User
+      description: Initiates a password reset process by sending a reset link to the user's email.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The user's email address.
+              required:
+                - email
+      responses:
+        '200':
+          description: Email sent successfully with reset link.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  token:
+                    type: string
+                    description: The token for resetting the password.
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Error when sending email.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+  /api/v1/set-password/{token}:
+    put:
+     summary: Reset Password with Token
+     tags:
+      - User
+     description: Resets the user's password using the provided token.
+     parameters:
+      - in: path
+        name: token
+        required: true
+        schema:
+          type: string
+        description: The token for resetting the password.
+     requestBody:
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              password:
+                type: string
+                description: The new password.
+              confirmPassword:
+                type: string
+                description: Confirm the new password.
+            required:
+              - password
+              - confirmPassword
+     responses:
+      '200':
+        description: Successfully reset password.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A success message.
+      '400':
+        description: Invalid request or password mismatch.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error code.
+                message:
+                  type: string
+                  description: Error message.
+      '404':
+        description: User not found.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  description: Indicates if the operation was successful.
+                message:
+                  type: string
+                  description: Error message.
+      '500':
+        description: Internal Server Error.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                success:
+                  type: boolean
+                  description: Indicates if the operation was successful.
+                message:
+                  type: string
+                  description: Error message.
+      security:
+      - bearerAuth: []
+  /api/v1/auth:
+    get:
+      summary: Get Authenticated User Info
+      tags:
+        - User
+      description: Retrieves information about the authenticated user.
+      responses:
+        '200':
+          description: Authenticated user information retrieved successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                description: Authenticated user information.
+      security:
+          - bearerAuth: []
+  /api/v1/users:
+    get:
+      summary: Get All Users
+      tags:
+        - User
+      description: |
+        Retrieves a list of all users along with their roles.
+      responses:
+        '200':
+          description: Successfully retrieved the list of all users.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: User ID.
+                        email:
+                          type: string
+                          description: User's email address.
+                        name:
+                          type: string
+                          description: User's name account.
+                        password:
+                          type: string
+                          description: User's password information.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+          - bearerAuth: []
+    post:
+      summary: User Registration
+      tags:
+        - User
+      description: |
+        Registers a new user account.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: The user's name.
+                email:
+                  type: string
+                  format: email
+                  description: The user's email address.
+                password:
+                  type: string
+                  description: The user's password.
+              required:
+                - password
+                - name
+                - email
+      responses:
+        '201':
+          description: Successfully registered a new user account.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  userInformation:
+                    type: object
+                    description: Information about the registered user.
+        '400':
+          description: Invalid email or email already exists.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+          - bearerAuth: []
+  /api/v1/users/{id}:
+    get:
+      summary: Get User by ID
+      tags:
+        - User
+      description: |
+        Retrieves user information by user ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the user to retrieve.
+      responses:
+        '201':
+          description: Successfully retrieved user information by ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: object
+                    description: Information about the user.
+        '404':
+          description: User not found by the provided ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+          - bearerAuth: []
+    put:
+      summary: Update User by ID
+      tags:
+        - User
+      description: |
+        Updates user information by user ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the user to update.
+      requestBody:
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: The updated email address.
+                password:
+                  type: string
+                  description: The updated password.
+                name:
+                  type: string
+                  description: The updated name.
+      responses:
+        '200':
+          description: Successfully updated user information.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '400':
+          description: Invalid email, password, or name.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '401':
+          description: New password is the same as the old password.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '404':
+          description: User not found by the provided ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+          - bearerAuth: []
+    delete:
+      summary: Delete User by ID
+      tags:
+        - User
+      description: |
+        Deletes a user by user ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+          description: The ID of the user to delete.
+      responses:
+        '200':
+          description: Successfully deleted the user.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '404':
+          description: User not found by the provided ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+          - bearerAuth: []
+  /api/v1/airports:
+    get:
+      summary: Get All Airports
+      tags:
+        - Airport
+      description: Retrieves a list of all airports with description.
+      responses:
+        '201':
+          description: Successfully get all Airports data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: integer
+                          description: Airport ID.
+                        name:
+                          type: string
+                          description: Airport name.
+                        abv:
+                          type: string
+                          description: Airport abbreviation.
+                        national_id:
+                          type: string
+                          description: National ID.
+                        city:
+                          type: string
+                          description: City where the airport is located.
+                        lat:
+                          type: number
+                          description: Latitude of the airport.
+                        lng:
+                          type: number
+                          description: Longitude of the airport.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+    post:
+      summary: Add a new Airport
+      tags:
+        - Airport
+      description: Adds a new airport to the system.
+      requestBody:
+        description: Airport data to be added.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Airport name.
+                abv:
+                  type: string
+                  description: Airport abbreviation (should be in uppercase).
+                city:
+                  type: string
+                  description: City where the airport is located.
+                national_id:
+                  type: string
+                  description: National ID.
+                lat:
+                  type: number
+                  description: Latitude of the airport.
+                lng:
+                  type: number
+                  description: Longitude of the airport.
+      responses:
+        '201':
+          description: New Airport Created Successfully.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  airportInformation:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Airport ID.
+                      name:
+                        type: string
+                        description: Airport name.
+                      abv:
+                        type: string
+                        description: Airport abbreviation.
+                      city:
+                        type: string
+                        description: City where the airport is located.
+                      national_id:
+                        type: string
+                        description: National ID.
+                      lat:
+                        type: number
+                        description: Latitude of the airport.
+                      lng:
+                        type: number
+                        description: Longitude of the airport.
+        '400':
+          description: Bad Request - Invalid Airport Name.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+  /api/v1/airports/{id}:
+    get:
+      summary: Get Airport by ID
+      tags:
+        - Airport
+      description: Retrieves airport data by its unique ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the airport to retrieve.
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Successfully retrieved airport data by ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Airport ID.
+                      name:
+                        type: string
+                        description: Airport name.
+                      abv:
+                        type: string
+                        description: Airport abbreviation.
+                      city:
+                        type: string
+                        description: City where the airport is located.
+                      national_id:
+                        type: string
+                        description: National ID.
+                      lat:
+                        type: number
+                        description: Latitude of the airport.
+                      lng:
+                        type: number
+                        description: Longitude of the airport.
+        '404':
+          description: Airport Not Found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+    put:
+     summary: Update Airport by ID
+     tags:
+      - Airport
+     description: Updates airport data by its unique ID.
+     parameters:
+      - in: path
+        name: id
+        required: true
+        description: ID of the airport to update.
+        schema:
+          type: string
+     requestBody:
+      description: Updated airport data.
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+                description: Updated airport name.
+              abv:
+                type: string
+                description: Updated airport abbreviation.
+              city:
+                type: string
+                description: Updated city where the airport is located.
+              national_id:
+                type: string
+                description: Updated national ID.
+              lat:
+                type: number
+                description: Updated latitude of the airport.
+              lng:
+                type: number
+                description: Updated longitude of the airport.
+     responses:
+      '200':
+        description: Successfully updated airport data by ID.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A success message.
+      '400':
+        description: Bad Request - Invalid Name or Name Already Used.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error code.
+                message:
+                  type: string
+                  description: Error message.
+      '404':
+        description: Airport Not Found.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error code.
+                message:
+                  type: string
+                  description: Error message.
+      '500':
+        description: Internal Server Error.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Error message.
+     security:
+      - bearerAuth: []
+    delete:
+     summary: Delete Airport by ID
+     tags:
+      - Airport
+     description: Deletes airport data by its unique ID.
+     parameters:
+      - in: path
+        name: id
+        required: true
+        description: ID of the airport to delete.
+        schema:
+          type: string
+     responses:
+      '200':
+        description: Successfully deleted airport data by ID.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A success message.
+      '404':
+        description: Airport Not Found.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                error:
+                  type: string
+                  description: Error code.
+                message:
+                  type: string
+                  description: Error message.
+      '500':
+        description: Internal Server Error.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Error message.
+     security:
+      - bearerAuth: []
+  /api/v1/airplanes:
+    get:
+      summary: Get All Airplanes
+      tags:
+        - Airplane
+      description: Retrieves a list of all airplanes.
+      responses:
+        '201':
+          description: Successfully get all airplanes data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          description: Airplane ID.
+                        name:
+                          type: string
+                          description: Airplane name.
+                        code:
+                          type: string
+                          description: Airplane code.
+                        speed:
+                          type: number
+                          description: Airplane speed.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+    post:
+      summary: Add a new Airplane
+      tags:
+        - Airplane
+      description: Adds a new airplane to the system.
+      requestBody:
+        description: Airplane data to be added.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Airplane name.
+                code:
+                  type: string
+                  description: Airplane code (should be in uppercase).
+                speed:
+                  type: number
+                  description: Airplane speed.
+      responses:
+        '201':
+          description: Successfully added new airplane.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  airplaneInformation:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Airplane ID.
+                      name:
+                        type: string
+                        description: Airplane name.
+                      code:
+                        type: string
+                        description: Airplane code.
+                      speed:
+                        type: number
+                        description: Airplane speed.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+  /api/v1/airplanes/{id}:
+    get:
+      summary: Get Airplane by ID
+      tags:
+        - Airplane
+      description: Retrieves airplane data by its unique ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the airplane to retrieve.
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Successfully retrieved airplane data by ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Airplane ID.
+                      name:
+                        type: string
+                        description: Airplane name.
+                      code:
+                        type: string
+                        description: Airplane code.
+                      speed:
+                        type: number
+                        description: Airplane speed.
+        '404':
+          description: Airplane Not Found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+    put:
+      summary: Update Airplane by ID
+      tags:
+        - Airplane
+      description: Updates airplane data by its unique ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the airplane to update.
+          schema:
+            type: string
+      requestBody:
+        description: Updated airplane data.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Updated airplane name.
+                code:
+                  type: string
+                  description: Updated airplane code.
+                speed:
+                  type: number
+                  description: Updated airplane speed.
+      responses:
+        '200':
+          description: Successfully updated airplane data by ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '404':
+          description: Airplane Not Found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Delete Airplane by ID
+      tags:
+        - Airplane
+      description: Deletes airplane data by its unique ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: ID of the airplane to delete.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted airplane data by ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '404':
+          description: Airplane Not Found.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+  /api/v1/schedules:
+    get:
+     summary: Get All Schedules
+     tags:
+      - Schedule
+     description: Retrieves a list of all schedules with additional details.
+     responses:
+      '201':
+        description: Successfully retrieved all schedules data.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: A success message.
+                data:
+                  type: array
+                  items:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Schedule ID.
+                      airplane_id:
+                        type: string
+                        description: Airplane ID.
+                      from_id:
+                        type: string
+                        description: Departure location ID.
+                      to_id:
+                        type: string
+                        description: Arrival location ID.
+                      time_departure:
+                        type: string
+                        description: Departure time.
+                      time_arrive:
+                        type: string
+                        description: Arrival time.
+                      price:
+                        type: number
+                        description: Ticket price.
+      '500':
+        description: Internal Server Error.
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                message:
+                  type: string
+                  description: Error message.
+     security:
+      - bearerAuth: []
+    post:
+      summary: Add a new Schedule
+      tags:
+        - Schedule
+      description: Adds a new schedule to the system.
+      requestBody:
+        description: Schedule data to be added.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                airplane_id:
+                  type: string
+                  description: Airplane ID.
+                from_id:
+                  type: string
+                  description: Departure location ID.
+                to_id:
+                  type: string
+                  description: Arrival location ID.
+                time_departure:
+                  type: string
+                  description: Departure time.
+                time_arrive:
+                  type: string
+                  description: Arrival time.
+                price:
+                  type: number
+                  description: Ticket price.
+      responses:
+        '201':
+          description: Successfully added new schedule.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  userInformation:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Schedule ID.
+                      airplane_id:
+                        type: string
+                        description: Airplane ID.
+                      from_id:
+                        type: string
+                        description: Departure location ID.
+                      to_id:
+                        type: string
+                        description: Arrival location ID.
+                      time_departure:
+                        type: string
+                        description: Departure time.
+                      time_arrive:
+                        type: string
+                        description: Arrival time.
+                      price:
+                        type: number
+                        description: Ticket price.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+  /api/v1/schedules/{id}:
+    get:
+      summary: Get Schedule by ID
+      tags:
+        - Schedule
+      description: Retrieves details of a schedule based on its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Schedule ID.
+          schema:
+            type: string
+      responses:
+        '201':
+          description: Successfully retrieved schedule data by ID.
+          content:
+            application/x-www-form-urlencoded:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: object
+                    properties:
+                      id:
+                        type: string
+                        description: Schedule ID.
+                      airplane_id:
+                        type: string
+                        description: Airplane ID.
+                      from_id:
+                        type: string
+                        description: Departure location ID.
+                      to_id:
+                        type: string
+                        description: Arrival location ID.
+                      time_departure:
+                        type: string
+                        description: Departure time.
+                      time_arrive:
+                        type: string
+                        description: Arrival time.
+                      price:
+                        type: number
+                        description: Ticket price.
+        '404':
+          description: Invalid Schedule ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+    put:
+      summary: Update Schedule by ID
+      tags:
+        - Schedule
+      description: Updates details of a schedule based on its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Schedule ID.
+          schema:
+            type: string
+      requestBody:
+        description: Updated schedule data.
+        required: true
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                airplane_id:
+                  type: string
+                  description: Updated Airplane ID.
+                from_id:
+                  type: string
+                  description: Updated Departure location ID.
+                to_id:
+                  type: string
+                  description: Updated Arrival location ID.
+                time_departure:
+                  type: string
+                  description: Updated Departure time.
+                time_arrive:
+                  type: string
+                  description: Updated Arrival time.
+                price:
+                  type: number
+                  description: Updated Ticket price.
+      responses:
+        '200':
+          description: Successfully updated schedule data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '404':
+          description: Invalid Schedule ID or Departure and Arrival are the same.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Delete Schedule by ID
+      tags:
+        - Schedule
+      description: Deletes a schedule based on its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Schedule ID.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted schedule.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '404':
+          description: Invalid Schedule ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+  /api/v1/transactions:
+    get:
+      summary: Get All Transactions
+      tags:
+        - Transaction
+      description: Retrieves a list of all transactions.
+      responses:
+        '201':
+          description: Successfully retrieved all transactions data.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+                  data:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        // Define transaction properties here.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+  /api/v1/transactions/confirm/{id}:
+    put:
+      summary: Confirm Transaction by ID
+      tags:
+        - Transaction
+      description: Confirms a transaction based on its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Transaction ID.
+          schema:
+            type: string
+      requestBody:
+        description: Confirmation data.
+        required: false
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              type: object
+              properties:
+                status:
+                  type: string
+                  description: Confirmation status ('Confirmed').
+      responses:
+        '200':
+          description: Successfully confirmed transaction.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '404':
+          description: Invalid Transaction ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+  /api/v1/transactions/{id}:
+    delete:
+      summary: Delete Transaction by ID
+      tags:
+        - Transaction
+      description: Deletes a transaction based on its ID.
+      parameters:
+        - in: path
+          name: id
+          required: true
+          description: Transaction ID.
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successfully deleted transaction.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: A success message.
+        '404':
+          description: Invalid Transaction ID.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+                    description: Error code.
+                  message:
+                    type: string
+                    description: Error message.
+        '500':
+          description: Internal Server Error.
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    description: Error message.
+      security:
+        - bearerAuth: []
+tags:
+  - name: User
+    description: Endpoints related to user CRUD operations
+  - name: Airport
+    description: Endpoints related to airport CRUD operations
+  - name: Airplane
+    description: Endpoints related to airplane CRUD operations
+  - name: Schedule
+    description: Endpoints related to schedule CRUD operations
+  - name: Transaction
+    description: Endpoints related to transaction CRUD operations
